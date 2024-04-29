@@ -1,6 +1,11 @@
 // authApiSlice.js
 import { createApi } from "@reduxjs/toolkit/query/react";
-import authService from "@/appwrite/auth"; 
+import {
+  register,
+  login,
+  getCurrentUser,
+  logout,
+} from "@/appwrite/services/authService";
 
 export const authApiSlice = createApi({
   reducerPath: "authApi",
@@ -8,7 +13,7 @@ export const authApiSlice = createApi({
     createAccount: builder.mutation({
       queryFn: async (user) => {
         try {
-          const response = await authService.createAccount(user);
+          const response = await register(user);
           return { data: response };
         } catch (error) {
           return { error: error.message };
@@ -18,7 +23,7 @@ export const authApiSlice = createApi({
     loginUser: builder.mutation({
       queryFn: async (credentials) => {
         try {
-          const response = await authService.login(credentials);
+          const response = await login(credentials);
           return { data: response };
         } catch (error) {
           return { error: error.message };
@@ -28,7 +33,7 @@ export const authApiSlice = createApi({
     getCurrentUser: builder.query({
       queryFn: async () => {
         try {
-          const response = await authService.getCurrentUser();
+          const response = await getCurrentUser();
           return { data: response };
         } catch (error) {
           return { error: error.message };
@@ -38,7 +43,7 @@ export const authApiSlice = createApi({
     logoutUser: builder.mutation({
       queryFn: async () => {
         try {
-          await authService.logout();
+          await logout();
           return { data: null };
         } catch (error) {
           return { error: error.message };

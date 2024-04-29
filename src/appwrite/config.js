@@ -1,4 +1,6 @@
-const conf = {
+import { Client, Account, Databases, Storage } from "appwrite";
+
+export const config = {
   appwriteUrl: String(import.meta.env.VITE_APP_APPWRITE_URL),
   appwriteProjectId: String(import.meta.env.VITE_APP_APPWRITE_PROJECT_ID),
   appwriteDatabaseId: String(import.meta.env.VITE_APP_APPWRITE_DATABASE_ID),
@@ -44,4 +46,12 @@ const conf = {
   ),
 };
 
-export default conf;
+const client = new Client()
+  .setEndpoint(config.appwriteUrl)
+  .setProject(config.appwriteProjectId);
+
+export const account = new Account(client);
+
+export const databases = new Databases(client);
+
+export const bucket = new Storage(client);
