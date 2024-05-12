@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { useCreateAccountMutation } from "@/store/slices/authApiSlice";
+import {
+  useCreateAccountMutation,
+  useCreateSessionMutation,
+  useGetAccountQuery,
+} from "@/store/slices/authApiSlice";
+import { useDispatch } from "react-redux";
+import { setUserData } from "@/store/slices/userSlice";
+import { useEffect } from "react";
 
 // Zod-Schema
 const formSchema = z
@@ -31,6 +38,7 @@ const formSchema = z
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -40,26 +48,40 @@ const RegisterForm = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const handleLoginClick = () => {
-    navigate("/login");
-  };
-
-  const [createAccount, { isLoading, isError, error }] =
-    useCreateAccountMutation();
+  const [
+    createAccount,
+    { isLoading: accountCreationLoading, isSuccess: registerSuccess },
+  ] = useCreateAccountMutation();
+  // const [loginUser, { isSuccess: loginSuccess }] = useCreateSessionMutation();
+  const { data: userData, refetch } = useGetAccountQuery();
 
   const onSubmit = async (data) => {
     try {
-      const response = await createAccount(data).unwrap();
-      if (response) {
-        console.log("User registered Successfully!!!");
-        navigate("/");
-        return null;
-      }
-    } catch (error) {
-      console.error(`Error: ${error}`);
+      // Register the user
+      await createAccount(data).unwrap();
 
-      alert("An error occurred during registration. Please try again.");
+      console.log("User session registered Successfully!!!");
+
+      // After successful login, refetch the user data
+      refetch();
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
+      alert(
+        "An error occurred during registration or login. Please try again."
+      );
     }
+  };
+
+  useEffect(() => {
+    if (registerSuccess && userData) {
+      dispatch(setUserData(userData));
+      navigate("/profile");
+      console.log("User session created Successfully!!!");
+    }
+  }, [registerSuccess, userData, dispatch, navigate]);
+
+  const handleLoginClick = () => {
+    navigate("/login");
   };
 
   return (
@@ -152,8 +174,12 @@ const RegisterForm = () => {
               </p>
             )}
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Registering..." : "Register"}
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={accountCreationLoading}
+          >
+            {accountCreationLoading ? "Registering..." : "Register"}
           </Button>
         </form>
         <div className="text-center mt-6">

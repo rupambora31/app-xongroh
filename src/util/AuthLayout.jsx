@@ -1,19 +1,14 @@
-import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { useGetCurrentUserQuery } from "../store/slices/authApiSlice";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const AuthLayout = () => {
-  const { data, isLoading, isError } = useGetCurrentUserQuery();
+  const location = useLocation();
+  const userData = useSelector((state) => state.user.userData);
 
-  if (isLoading) {
-    return <div className="items-center">Loading...</div>; // Consider using a more sophisticated loading component
+  if (!userData || userData === null) {
+    return <Navigate to="/login" state={{ from: location }} />;
   }
-
-  if (isError || !data) {
-    // Enhance error handling, e.g., show an error message or redirect to an error page
-    console.log("An error occurred while fetching user data.");
-    return <Navigate to="/login" />;
-  }
+  console.log("AuthLayout :: ", userData);
 
   return <Outlet />;
 };

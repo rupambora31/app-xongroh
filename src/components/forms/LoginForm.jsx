@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { useLoginUserMutation } from "@/store/slices/authApiSlice";
+import {
+  useCreateSessionMutation,
+  useGetAccountQuery,
+} from "@/store/slices/authApiSlice";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setUserData } from "@/store/slices/userSlice";
 
 const LoginSchema = z.object({
   email: z.string().email("Invalid email address."),
@@ -24,27 +30,37 @@ const LoginForm = () => {
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [loginUser, { isSuccess: createSessionSuccess, isLoading }] =
+    useCreateSessionMutation();
+  const { data: userData, refetch } = useGetAccountQuery();
+
+  const onSubmit = async (args) => {
+    try {
+      await loginUser({
+        email: args.email,
+        password: args.password,
+      }).unwrap();
+
+      // After successful login, refetch the user data
+      refetch();
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
+      alert("An error occurred during login. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    if (createSessionSuccess && userData) {
+      dispatch(setUserData(userData));
+      // navigate("/profile");
+      console.log("User session created Successfully!!!");
+    }
+  }, [createSessionSuccess, userData, dispatch, navigate]);
 
   const handleRegisterClick = () => {
     navigate("/register");
-  };
-  const [loginUser, { isLoading, isError, error }] = useLoginUserMutation();
-
-  const onSubmit = async (data) => {
-    try {
-      const response = await loginUser({
-        email: data.email,
-        password: data.password,
-      }).unwrap();
-      if (response) {
-        console.log("User logged in Successfully!!!");
-        navigate("/");
-        return null;
-      }
-    } catch (error) {
-      console.error(`Error: ${error}`);
-      alert("An error occurred during login. Please try again.");
-    }
   };
 
   return (
