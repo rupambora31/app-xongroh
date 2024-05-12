@@ -1,5 +1,5 @@
 // authApiSlice.js
-import { account, config } from "@/appwrite/config";
+import { account, config, databases } from "@/appwrite/config";
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ID } from "appwrite";
 
@@ -8,8 +8,9 @@ export const authApiSlice = createApi({
   tagTypes: ["Account"],
   endpoints: (builder) => ({
     createAccount: builder.mutation({
-      queryFn: async ({ email, password, name }) => {
+      queryFn: async ({ email, password, name, hometown }) => {
         try {
+          // CREATE ACCOUNT
           const userAccount = await account.create(
             ID.unique(),
             email,
@@ -18,11 +19,29 @@ export const authApiSlice = createApi({
           );
           console.log("createAccount :: userAccount :: ", userAccount);
 
+          //  CREATE SESSION
           const session = await account.createEmailPasswordSession(
             email,
             password
           );
           console.log("createAccount :: session :: ", session);
+
+          // CREATE PROFILE
+          const username = email.split("@")[0];
+          const userId = userAccount.$id;
+          const userDocument = await databases.createDocument(
+            config.appwriteDatabaseId,
+            config.appwriteProfileCollectionId,
+            ID.unique(),
+            {
+              username,
+              hometown,
+              userId,
+            }
+          );
+
+          console.log("createAccount :: userDocument :: ", userDocument);
+
           return { response: { userAccount, session } };
         } catch (error) {
           console.error("Apprite service :: createAccount :: ", error);
