@@ -7,6 +7,7 @@ export const authApiSlice = createApi({
   baseQuery: fakeBaseQuery(),
   tagTypes: ["Account"],
   endpoints: (builder) => ({
+    // CREATE-ACCOUNT ENDPOINT
     createAccount: builder.mutation({
       queryFn: async ({ email, password, name, hometown }) => {
         try {
@@ -51,6 +52,7 @@ export const authApiSlice = createApi({
       invalidatesTags: ["Account"],
     }),
 
+    // CREATE-SESION ENDPOINT
     createSession: builder.mutation({
       queryFn: async ({ email, password }) => {
         try {
@@ -68,6 +70,7 @@ export const authApiSlice = createApi({
       invalidatesTags: ["Account"],
     }),
 
+    // DELETE-SESSION ENDPOINT
     deleteSession: builder.mutation({
       queryFn: async () => {
         try {
@@ -81,6 +84,7 @@ export const authApiSlice = createApi({
       invalidatesTags: ["Account"],
     }),
 
+    //  GET-ACCOUNT ENDPOINT
     getAccount: builder.query({
       queryFn: async () => {
         try {

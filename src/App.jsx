@@ -8,6 +8,9 @@ import PortfolioPage from "./pages/PortfolioPage";
 import { useDispatch } from "react-redux";
 import { setUserData } from "./store/slices/userSlice";
 import { useEffect } from "react";
+import Layout from "./components/layout/Layout";
+import SearchPage from "./pages/SearchPage";
+import CommunitiesPage from "./pages/CommunitiesPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -19,13 +22,16 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/login" element={<LoginPage />} />
-
-      <Route element={<AuthLayout />}>
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/portfolio" element={<PortfolioPage />} />
+      <Route path="/" element={<Layout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route element={<AuthLayout />}>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/communities" element={<CommunitiesPage />} />
+        </Route>
       </Route>
     </Routes>
   );
