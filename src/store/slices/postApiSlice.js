@@ -3,18 +3,19 @@ import { Query, ID } from "appwrite";
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const postApiSlice = createApi({
+  reducerPath: "postApi",
   baseQuery: fakeBaseQuery(),
   endpoints: (builder) => ({
     // CREATE-POST ENDPOINT
     createPost: builder.mutation({
-      queryFn: async ({ contentURL, content, tags, author, isDraft }) => {
+      queryFn: async ({ contentFileId, content, tags, author, isDraft }) => {
         try {
           return await databases.createDocument(
             config.appwriteDatabaseId,
             config.appwritePostCollectionId,
             ID.unique(),
             {
-              contentURL,
+              contentFileId,
               content,
               tags,
               author,
@@ -104,11 +105,15 @@ export const postApiSlice = createApi({
     createPostFile: builder.mutation({
       queryFn: async (file) => {
         try {
-          return await bucket.createFile(
+          const result = await bucket.createFile(
             config.appwritePostBucketId,
             ID.unique(),
             file
           );
+
+          // console.log(result);
+
+          return { data: result };
         } catch (error) {
           console.log("Appwrite service :: uploadFile() :: ", error);
           return false;

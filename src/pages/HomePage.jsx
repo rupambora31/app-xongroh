@@ -27,6 +27,11 @@ const HomePage = () => {
             <Button>Login</Button>
           </Link>
         </div>
+        <div>
+          <Link to="/add-creation">
+            <Button>Add Creation</Button>
+          </Link>
+        </div>
       </div>
     </>
   );

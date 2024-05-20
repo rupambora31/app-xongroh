@@ -65,7 +65,7 @@ const LoginForm = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <Card className="p-6 xl:w-1/4 md:w-1/2 shadow-md bg-">
+      <Card className="p-6 xl:w-1/4 md:w-1/2 shadow-md bg-card">
         <div className="w-full flex flex-col gap-y-3 items-center justify-center mb-8">
           <h1 className="text-2xl font-bold">Login</h1>
           <p className="text-muted-foreground text-sm">Access your account</p>

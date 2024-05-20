@@ -4,6 +4,7 @@ import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ID } from "appwrite";
 
 export const authApiSlice = createApi({
+  reducerPath: 'authApi', 
   baseQuery: fakeBaseQuery(),
   tagTypes: ["Account"],
   endpoints: (builder) => ({
