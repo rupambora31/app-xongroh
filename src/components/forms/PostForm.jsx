@@ -97,7 +97,7 @@ const PostForm = () => {
   };
 
   return (
-    <div className="flex justify-center items-center pt-12">
+    <div className="flex justify-center items-center mt-12  ">
       <Card className="p-6 xl:w-1/2 md:w-2/3 shadow-md bg-card">
         <div className="w-full flex flex-col gap-y-3 items-start justify-center mb-8">
           <h1 className="text-2xl font-bold pb-3">Add Creation</h1>
