@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import Layout from "./components/layout/Layout";
 import SearchPage from "./pages/SearchPage";
 import CommunitiesPage from "./pages/CommunitiesPage";
-import CreatePostPage from "./pages/post/CreatePostPage";
+import CreatePostPage from "./pages/post/creation/AddCreationPostPage";
 
 function App() {
   const dispatch = useDispatch();
