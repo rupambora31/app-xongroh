@@ -2,6 +2,7 @@ import { config, databases, bucket } from "@/appwrite/config";
 import { Query, ID } from "appwrite";
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 
+
 export const postApiSlice = createApi({
   reducerPath: "postApi",
   baseQuery: fakeBaseQuery(),
@@ -10,7 +11,7 @@ export const postApiSlice = createApi({
     createPost: builder.mutation({
       queryFn: async ({ contentFileId, content, tags, author, isDraft }) => {
         try {
-          return await databases.createDocument(
+          const postResult = await databases.createDocument(
             config.appwriteDatabaseId,
             config.appwritePostCollectionId,
             ID.unique(),
@@ -22,6 +23,8 @@ export const postApiSlice = createApi({
               isDraft,
             }
           );
+
+          return { data: postResult };
         } catch (error) {
           console.log("Appwrite service :: createPost() :: ", error);
         }
@@ -87,11 +90,12 @@ export const postApiSlice = createApi({
     getPost: builder.query({
       queryFn: async (documentId) => {
         try {
-          return await databases.getDocument(
+          const getPostResult = await databases.getDocument(
             config.appwriteDatabaseId,
             config.appwritePostCollectionId,
             documentId
           );
+          return { data: getPostResult };
         } catch (error) {
           console.log("Appwrite service :: getPost() :: ", error);
           return false;
@@ -116,7 +120,7 @@ export const postApiSlice = createApi({
           return { data: result };
         } catch (error) {
           console.log("Appwrite service :: uploadFile() :: ", error);
-          return false;
+          throw error;
         }
       },
     }),
@@ -180,13 +184,17 @@ export const postApiSlice = createApi({
     getPostFileView: builder.query({
       queryFn: async (fileId) => {
         try {
-          return await databases.getFileView(
+          const fileResult = bucket.getFileView(
             config.appwritePostBucketId,
             fileId
           );
+          const serializedUrl = {
+            href: fileResult.href,
+          };
+          return { data: serializedUrl };
         } catch (error) {
           console.log("Appwrite service :: getPost() :: ", error);
-          return false;
+          throw error;
         }
       },
     }),

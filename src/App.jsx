@@ -12,6 +12,7 @@ import Layout from "./components/layout/Layout";
 import SearchPage from "./pages/SearchPage";
 import CommunitiesPage from "./pages/CommunitiesPage";
 import CreatePostPage from "./pages/post/creation/AddCreationPostPage";
+import CreationPostPage from "./pages/post/creation/CreationPostPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ function App() {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/communities" element={<CommunitiesPage />} />
           <Route path="/add-creation" element={<CreatePostPage />} />
+          <Route path="/creation/:id" element={<CreationPostPage />} />
         </Route>
       </Route>
     </Routes>

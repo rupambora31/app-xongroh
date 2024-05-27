@@ -56,6 +56,8 @@ const PostForm = () => {
   const userId =
     JSON.parse(localStorage.getItem("userData"))?.$id ?? "undefined";
 
+  const [createdPostId, setCreatedPostId] = useState(null);
+
   const onSubmit = async (formData) => {
     const postData = {
       content: formData.content,
@@ -65,13 +67,18 @@ const PostForm = () => {
       contentFileId: fileId,
     };
 
-    await createPost(postData).unwrap();
+    const postResult = await createPost(postData).unwrap();
 
+    setCreatedPostId(postResult.$id);
     // Reset isDraft state after submission
     setIsDraft(false);
-
-    navigate("/");
   };
+
+  useEffect(() => {
+    if (createPostSuccess && createdPostId !== null) {
+      navigate(`/creation/${createdPostId}`);
+    }
+  }, [createPostSuccess, createdPostId]);
 
   const handleDraftClick = () => {
     setIsDraft(true);
