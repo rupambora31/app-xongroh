@@ -1,5 +1,5 @@
 import PostContent from "@/components/post/creation/creation-postpage/PostContent";
-import PostHeader from "@/components/post/creation/creation-postpage/PostHeader";
+import AuthorHeader from "@/components/post/creation/creation-postpage/AuthorHeader";
 import { useGetPostQuery } from "@/store/slices/postApiSlice";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -15,7 +15,7 @@ const CreationPostPage = () => {
     error,
   } = useGetPostQuery(id);
 
-  console.log(postData);
+  // console.log(postData);
 
   if (isLoading) {
     return (
@@ -32,7 +32,7 @@ const CreationPostPage = () => {
   return (
     isSuccess && (
       <>
-        <PostHeader author={postData.author} />
+        <AuthorHeader author={postData.author} />
         <PostContent postContent={postData} />
       </>
     )

@@ -8,7 +8,7 @@ const AuthLayout = () => {
   if (!userData || userData === null) {
     return <Navigate to="/login" state={{ from: location }} />;
   }
-  console.log("AuthLayout :: ", userData);
+  // console.log("AuthLayout :: ", userData);
 
   return <Outlet />;
 };

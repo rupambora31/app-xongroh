@@ -1,8 +1,19 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useGetPostsQuery } from "@/store/slices/postApiSlice";
+import CreationPostList from "@/components/post/creation/CreationPostList";
 
 const HomePage = () => {
+  // const {
+  //   data: creationPosts,
+  //   isSuccess,
+  //   isLoading,
+  //   isError,
+  //   error,
+  // } = useGetPostsQuery();
+  // console.log(creationPosts);
+
   return (
     <>
       <div className="flex flex-col m-4 gap-5">
@@ -32,6 +43,8 @@ const HomePage = () => {
             <Button>Add Creation</Button>
           </Link>
         </div>
+
+        <div><CreationPostList/></div>
       </div>
     </>
   );

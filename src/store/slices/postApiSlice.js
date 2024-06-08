@@ -2,10 +2,10 @@ import { config, databases, bucket } from "@/appwrite/config";
 import { Query, ID } from "appwrite";
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 
-
 export const postApiSlice = createApi({
   reducerPath: "postApi",
   baseQuery: fakeBaseQuery(),
+  tagTypes: ["Post"],
   endpoints: (builder) => ({
     // CREATE-POST ENDPOINT
     createPost: builder.mutation({
@@ -29,6 +29,7 @@ export const postApiSlice = createApi({
           console.log("Appwrite service :: createPost() :: ", error);
         }
       },
+      invalidatesTags: ["Post"],
     }),
 
     // UPDATE-POST ENDPOINT
@@ -72,18 +73,26 @@ export const postApiSlice = createApi({
 
     // GET-ALL-POSTS ENDPOINT
     getPosts: builder.query({
-      queryFn: async (queries = [Query.equal("isDraft", "false")]) => {
+      queryFn: async (
+        queries = [
+          Query.equal("isDraft", false),
+          ,
+          Query.orderDesc("$createdAt"),
+        ]
+      ) => {
         try {
-          return await databases.listDocuments(
+          const postsData = await databases.listDocuments(
             config.appwriteDatabaseId,
             config.appwritePostCollectionId,
             queries
           );
+          return { data: postsData };
         } catch (error) {
           console.log("Appwrite service :: getPosts() :: ", error);
           return false;
         }
       },
+      providesTags:["Post"]
     }),
 
     // GET-SINGLE-POST ENDPOINT
@@ -101,6 +110,7 @@ export const postApiSlice = createApi({
           return false;
         }
       },
+      // providesTags:["Post"]
     }),
 
     //  ****** FILES *******

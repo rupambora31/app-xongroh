@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { useGetProfileQuery } from "@/store/slices/profileApiSlice";
 
-const PostHeader = ({ author }) => {
-  console.log(author);
+const AuthorHeader = ({ author }) => {
+  // console.log(author);
 
   const { data, isLoading, isError, isSuccess, error } =
     useGetProfileQuery(author);
 
-  console.log(data);
+  // console.log(data);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -20,9 +20,9 @@ const PostHeader = ({ author }) => {
   if (isSuccess && data.documents.length > 0) {
     // Accessing the first document in the documents array
     const { username, dp } = data.documents[0];
-    console.log("Username:", username, "DP:", dp);
+    // console.log("Username:", username, "DP:", dp);
     return (
-      <div className="flex items-center justify-between px-6 pt-4 lg:px-6">
+      <div className="flex items-center justify-between p-4 lg:p-6">
         <div>
           <Button variant="normal" size="normal" className="flex">
             <div className="flex items-center">
@@ -61,4 +61,4 @@ const PostHeader = ({ author }) => {
   return null;
 };
 
-export default PostHeader;
+export default AuthorHeader;
